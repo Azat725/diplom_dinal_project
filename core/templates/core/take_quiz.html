@@ -1,0 +1,86 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        
+        <div class="card mb-4 border-danger">
+            <div class="card-body">
+                <h2 class="card-title">{{ quiz.title }}</h2>
+                {% if quiz.description %}
+                    <p class="card-text">{{ quiz.description }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% for question in quiz.questions.all %}
+            <div class="card mb-4">
+                <div class="card-header bg-white fw-bold">
+                    Вопрос {{ forloop.counter }}
+                    <span class="badge bg-secondary float-end">{{ question.score }} баллов</span>
+                </div>
+                
+                <div class="card-body">
+                    <p class="card-text mb-3" style="font-size: 1.1rem;">{{ question.text }}</p>
+                    
+                    {% if question.image %}
+                        <img src="{{ question.image.url }}" class="img-fluid mb-3 rounded" style="max-height: 300px;">
+                    {% endif %}
+
+                    <div class="mt-3">
+                        
+                        {% if question.question_type == 'SINGLE' %}
+                            {% for option in question.options.all %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" 
+                                       name="question_{{ question.id }}" 
+                                       id="opt_{{ option.id }}" 
+                                       value="{{ option.id }}">
+                                <label class="form-check-label" for="opt_{{ option.id }}">
+                                    {{ option.text }}
+                                </label>
+                            </div>
+                            {% endfor %}
+
+                        {% elif question.question_type == 'MULTI' %}
+                            {% for option in question.options.all %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" 
+                                       name="question_{{ question.id }}" 
+                                       id="opt_{{ option.id }}" 
+                                       value="{{ option.id }}">
+                                <label class="form-check-label" for="opt_{{ option.id }}">
+                                    {{ option.text }}
+                                </label>
+                            </div>
+                            {% endfor %}
+
+                        {% elif question.question_type == 'TEXT' %}
+                            <input type="text" class="form-control" 
+                                   name="question_{{ question.id }}" 
+                                   placeholder="Введите ваш ответ...">
+
+                        {% elif question.question_type == 'IMAGE_UPLOAD' %}
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Загрузите фото решения:</label>
+                                <input class="form-control" type="file" 
+                                       name="question_{{ question.id }}" accept="image/*">
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="d-grid gap-2 mb-5">
+                <button type="submit" class="btn btn-custom btn-lg">Завершить тест</button>
+            </div>
+        </form>
+        
+    </div>
+</div>
+{% endblock %}

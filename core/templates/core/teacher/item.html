@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card p-4">
+            <h3 class="mb-4">{{ title }}</h3>
+            <form method="post" enctype="multipart/form-data"> {% csrf_token %}
+                {{ form.media }} {{ form.as_p }}
+                <button type="submit" class="btn btn-custom">Сохранить</button>
+                <a href="{% url 'teacher_dashboard' %}" class="btn btn-outline-secondary">Отмена</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

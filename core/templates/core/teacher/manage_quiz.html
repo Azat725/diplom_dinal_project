@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="mb-3">
+    <a href="{% url 'teacher_dashboard' %}">&larr; Назад</a>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{{ quiz.title }} <small class="text-muted">(Редактирование)</small></h2>
+    <a href="{% url 'add_question' quiz.id %}" class="btn btn-custom">+ Добавить вопрос</a>
+</div>
+
+<div class="card">
+    <div class="card-header">Список вопросов</div>
+    <ul class="list-group list-group-flush">
+        {% for question in quiz.questions.all %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ question.get_question_type_display }}</strong>: {{ question.text|truncatechars:50 }}
+                    <br>
+                    <small class="text-muted">Баллы: {{ question.score }}</small>
+                </div>
+                <a href="/admin/core/question/{{ question.id }}/change/" target="_blank" class="btn btn-sm btn-outline-secondary">Ред. (Admin)</a>
+            </li>
+        {% empty %}
+            <li class="list-group-item text-center py-4 text-muted">В тесте пока нет вопросов.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

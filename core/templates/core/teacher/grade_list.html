@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Работы, ожидающие проверки</h2>
+<div class="list-group mt-3">
+    {% for sub in submissions %}
+        <a href="{% url 'grade_submission' sub.id %}" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ sub.student.get_full_name }}</h5>
+                <small>{{ sub.completed_at|date:"d.m.Y H:i" }}</small>
+            </div>
+            <p class="mb-1">Тест: {{ sub.quiz.title }}</p>
+        </a>
+    {% empty %}
+        <p>Нет работ для проверки.</p>
+    {% endfor %}
+</div>
+{% endblock %}
